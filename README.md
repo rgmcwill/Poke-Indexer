@@ -7,3 +7,4 @@ PYTHON:
 * lxml
 * django
 * celery
+* requests
