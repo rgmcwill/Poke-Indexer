@@ -43,20 +43,18 @@
         <th colspan="5">{{team_name}}</th>
       </tr>
       <tr>
-        <th>Home</th>
-        <th>Away</th>
-        <th>Home Score</th>
-        <th>Away Score</th>
-        <!-- <th>Date</th> -->
-      </tr>
-      {% for game_info in latest_team_list %}
-      <tr>
-        <td>{{game_info.team}}</td>
-        <td>{{game_info.opp_team}}</td>
-        <td>{{game_info.points}}</td>
-        <td>{{game_info.opp_points}}</td>
-      </tr>
-      {% endfor %}
+        <tr>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Type</th>
+        </tr>
+        {% for pokemon in pokemons %}
+        <tr>
+          <td>{{pokemon.numb}}</td>
+          <td>{{pokemon.name}}</td>
+          <td>{% for types in pokemon.types.all %}{{types.name}} {% endfor %}</td>
+        </tr>
+        {% endfor %}
     </table>
 
 </div>

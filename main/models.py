@@ -1,6 +1,20 @@
 import datetime
 from django.db import models
 
+class Type(models.Model):
+    name = models.CharField(max_length=15, default='Unknown')
+
+    def __str__(self):
+        return self.name
+
+class Pokemon(models.Model):
+    name = models.CharField(max_length=15, default='Missing No')
+    numb = models.IntegerField(default = (-1))
+    types = models.ManyToManyField("Type")
+
+    def __str__(self):
+        return self.name
+
 class Team(models.Model):
     team_name = models.CharField(max_length=30)
     conference = models.CharField(max_length=30)
