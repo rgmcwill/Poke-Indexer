@@ -10,13 +10,13 @@
         <img src="{% static 'logo.png' %}" width="220" height="163">
       </div>
 
-  <li><a href="CurrentRanking">Current Ranking</a></li>
-  <li><a class="active" href="TeamStatistics">Team Statistics</a></li>
+  <li><a class="active" href="TeamStatistics">Database Lookup</a></li>
+  <li><a href="CurrentRanking">Tools</a></li>
 </ul>
 
 <div style="margin-left:220px;padding:1px 16px;height:1000px;">
-  <h2>Team Statistics</h2>
-  <h3>Search statistics for a team</h3>
+  <h2>Pokemon</h2>
+  <h3>Search for a specific Pokemon</h3>
 
   <!-- <form autocomplete="off" action="">
     <div class="autocomplete" style="width:300px;">
@@ -32,7 +32,7 @@
   <form autocomplete="off" action="" method="POST">
       <div class="autocomplete" style="width:235px;">
         {% csrf_token %}
-        {{form.team}}
+        {{form.pokemon}}
         <input type="submit">
       </div>
 
@@ -40,11 +40,11 @@
 
   <table style="width:500px">
       <tr>
-        <th colspan="5">{{team_name}}</th>
+        <th colspan="5">{{poke_name}}</th>
       </tr>
       <tr>
         <tr>
-          <th>Number</th>
+          <th>PokeDex #</th>
           <th>Name</th>
           <th>Type</th>
         </tr>
@@ -53,6 +53,7 @@
           <td>{{pokemon.numb}}</td>
           <td>{{pokemon.name}}</td>
           <td>{% for types in pokemon.types.all %}{{types.name}} {% endfor %}</td>
+          <!--<td>{% for locations in pokemon.locations.all %} <b>{{locations.game.name}}</b>{{locations.name}} {% endfor %}</td>-->
         </tr>
         {% endfor %}
     </table>
@@ -158,31 +159,11 @@
     }
 
     /*An array containing all the country names in the world:*/
-    var teamNames =
-    ["Abilene Christian", "Akron", "Alabama", "Alabama A&M", "Alabama State", "Albany", "Alcorn State", "Appalachian St.", "Arizona", "Arizona St.", "Ark.-Pine Bluff", "Arkansas", "Army West Point", "Auburn", "Austin Peay",
-    "Ball State", "Baylor", "Belmont", "Bethune-Cookman", "Binghamton", "Boise State", "Boston College", "Boston U.", "Bowling Green", "Bradley", "Brown", "Bryant", "Bucknell", "Buffalo", "Butler", "BYU",
-    "Cal Poly", "CSU Fullerton", "California", "Campbell", "Canisius", "Central Ark.", "Central Conn. St.", "Central Mich.", "Charleston So.", "Charlotte", "Chattanooga", "Cleveland State", "Coastal Caro.", "Charleston", "Colgate", "Colorado State", "Columbia", "Coppin State", "Cornell", "Creighton", "CSU Bakersfield", "CSUN",
-    "Dartmouth", "Dayton", "Delaware", "Delaware State", "DePaul", "Detroit Mercy", "Drake", "Drexel", "Duke",
-    "East Carolina", "Eastern Illinois", "Eastern Ky.", "Eastern Mich.", "Elon", "ETSU", "Evansville",
-    "Fairfield", "Fairleigh D'son", "FGCU", "FIU", "Florida Atlantic", "Florida", "Florida A&M", "Florida State", "Fordham", "Fresno State", "Furman",
-    "Ga. Southern", "Gardner-Webb", "George Mason", "George Washington", "Georgia", "Georgia State", "Georgia Tech", "Grambling", "Grand Canyon", "Green Bay",
-    "Hampton", "Hartford", "Harvard", "Hawaii", "Hofstra", "Holy Cross", "Houston", "Houston Baptist", "Howard",
-    "Idaho State", "Illinois", "Illinois State", "Incarnate Word", "Indiana", "Indiana State", "Iona", "Iowa", "Iowa State", "IUPUI",
-    "Jackson State", "Jacksonville", "Jacksonville St.", "James Madison",
-    "Kansas", "Kennesaw State", "Kent State", "Kentucky",
-    "La Salle", "La.-Monroe", "Lafayette", "Lamar University", "Lehigh", "Liberty", "Lipscomb", "LIU Brooklyn", "Long Beach St.", "Longwood", "Louisiana", "Louisiana Tech", "Louisville", "Loyola Chicago", "Loyola Marymount", "LSU",
-    "Maine", "Manhattan", "Marist", "Marshall", "Maryland", "Massachusetts", "McNeese", "Memphis", "Mercer", "Miami [Ohio]",  "Michigan", "Mich. St.", "Middle Tenn.", "Minnesota", "Mississippi St.", "Mississippi Val.", "Missouri", "Missouri State", "Monmouth", "Montana", "Morehead State", "Morgan State", "	Mt. St. Mary's", "Murray State",
-    "N.C. A&T", "N.C. Central", "NC State", "Nebraska", "Nevada", "New Mexico", "New Mexico St.", "Niagara", "Nicholls State", "Norfolk State", "North Carolina", "North Dakota", "North Dakota St.", "North Florida", "North Texas", "Northern Colo.", "Northern Ill.", "Northern Kentucky", "Northwestern", "Northwestern St.", "Notre Dame",
-    "Oakland", "Ohio", "Ohio St.", "Oklahoma", "Oklahoma State", "Ole Miss", "Omaha", "Oregon", "Oregon St.",
-    "Pacific", "Penn", "Penn St.", "Pittsburgh", "Portland St.", "Prairie View", "Presbyterian", "Princeton", "Providence", "Purdue", "Purdue Fort Wayne",
-    "Quinnipiac",
-    "Radford", "Rhode Island", "Rider", "Robert Morris", "Rutgers",
-    "Sacramento St.", "Sacred Heart", "Saint Francis [Pa.]", "Saint Joseph's", "Saint Louis", "Saint Mary's [CA]", "Saint Peter's", "Sam Houston St.", "Samford", "San Diego", "San Diego State", "San Jose State", "Santa Carla", "Savannah State", "Seattle U", "Seton Hall", "SFA", "Siena", "SIUE", "South Alabama", "South Carolina", "South Carolina St.", "South Dakota", "South Dakota St.", "South Florida", "Southeast Mo. St.", "Southeastern La.", "Southern Ill.", "Southern Miss.", "Southern Univ.", "Southern Utah", "St. Bonaventure", "St. John's", "Stanford", "Stetson", "Stony Brook", "Syracuse",
-    "Tennessee", "Tennessee State", "Tennessee Tech", "Texas", "Texas A&M", "Texas-Am-Corpus", "Texas Southern", "Texas State", "Texas Tech", "Toledo", "Towson", "Troy", "Tulsa",
-    "UAB", "UC Davis", "UC Riverside", "UC Santa Barbara", "UCF", "UCLA", "UConn", "UIC", "UMass Lowell", "UMBC", "UMES", "UMKC", "UNC Greensboro", "UNCW", "UNI", "UNLV", "USC Upstate", "UT Arlington", "UT Martin", "Utah", "Utah State", "Utah Valley", "UTEP", "UTSA",
-    "Valparaiso", "Villanova", "Virginia", "Virginia Tech",
-    "Wagner", "Washington", "Weber State", "Western Caro.", "Western Ill.", "Western Ky.", "Western Mich.", "Wichita State", "Winthrop", "Wisconsin", "Wright State",
-    "Yale", "Youngstown St."];
+    var teamNames = []
+    
+    {% for pokemon in pokemons %}
+      teamNames.push("{{pokemon.name}}")
+    {% endfor %}
 
     /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
     autocomplete(document.getElementById("searchBar"), teamNames);

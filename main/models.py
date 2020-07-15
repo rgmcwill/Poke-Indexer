@@ -1,8 +1,25 @@
 import datetime
 from django.db import models
 
+class Evolution(models.Model):
+    name = models.CharField(max_length=15, default='BetterVersion')
+
+class Game(models.Model):
+    name = models.CharField(max_length=20, default='Game')
+    gen = models.IntegerField(default = (-1))
+
+    def __str__(self):
+        return self.name
+
+class Location(models.Model):
+    name = models.CharField(max_length=15, default='Route 0')
+    game = models.ForeignKey(Game,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.game.name + ', ' + self.name
+
 class Type(models.Model):
-    name = models.CharField(max_length=15, default='Unknown')
+    name = models.CharField(max_length=15, default='Type')
 
     def __str__(self):
         return self.name
@@ -10,7 +27,9 @@ class Type(models.Model):
 class Pokemon(models.Model):
     name = models.CharField(max_length=15, default='Missing No')
     numb = models.IntegerField(default = (-1))
-    types = models.ManyToManyField("Type")
+    types = models.ManyToManyField(Type)
+    locations = models.ManyToManyField(Location)
+    evolution = models.ForeignKey(Evolution,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
         return self.name

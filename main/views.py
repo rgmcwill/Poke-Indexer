@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.template import loader
 from django.http import HttpResponse
 from main.models import Game_Info,Team_RPI,Team
@@ -7,7 +7,7 @@ from main.dbTeams import DB_Teams_Interface
 from main.webscorescraping import Web_Scraping
 from main.webteamscraping import Web_Team_Scraping
 from main.webpokemonscraping import Web_Pokemon_Scraping
-from.forms import TeamSearch
+from.forms import PokemonSearch
 from main.math import RPI_Calculation
 from main.dbRating import DB_RPI_Interface
 from main.webtargets import Past
@@ -15,21 +15,21 @@ from main.models import Pokemon
 
 # Create your views here.
 # Ross made a really cool comment
-def TeamStatistics(request):
+def DBLookup(request):
     if request.method == 'POST':
-        searched_team = request.POST['team']
+        #searched_team = request.POST['team']
+        searched_pokemon = request.POST['pokemon']
         # print(searched_team)
 
         db = DB_Game_Interface()
 
-        latest_team_list = db.get_by_team(searched_team)
-        pokemons = Pokemon.objects.all()
-        template = loader.get_template('TeamStatistics.html')
+        #latest_team_list = db.get_by_team(searched_team)
+        pokemons = Pokemon.objects.filter(name=searched_pokemon)
+        template = loader.get_template('DBLookup.html')
         context = {
-            'team_name' : searched_team,
-            'latest_team_list': latest_team_list,
+            'poke_name' : searched_pokemon,
             'pokemons': pokemons,
-            'form' : TeamSearch()
+            'form' : PokemonSearch()
         }
         return HttpResponse(template.render(context, request))
     else:
@@ -51,19 +51,20 @@ def TeamStatistics(request):
             RPI_Calculation(i)'''
         latest_team_list = db.get_by_team("Arkansas")
         pokemons = Pokemon.objects.all()
-        template = loader.get_template('TeamStatistics.html')
+        template = loader.get_template('DBLookup.html')
         context = {
             'team_name' : "Arkansas",
+            'poke_name' : "",
             'latest_team_list': latest_team_list,
             'pokemons': pokemons,
-            'form' : TeamSearch()
+            'form' : PokemonSearch()
         }
         return HttpResponse(template.render(context, request))
 
-def CurrentRanking(request):
-    latest_team_list = Team_RPI.objects.all().order_by('-rpi')
-    template = loader.get_template('CurrentRanking.html')
-    context = {
-        'latest_team_list': latest_team_list,
-    }
-    return HttpResponse(template.render(context, request))
+def index(request):
+    return redirect('/DBLookup')
+
+def clear(request):
+    for i in Pokemon.objects.all():
+        i.delete()
+    return redirect('/DBLookup')
